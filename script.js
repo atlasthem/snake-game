@@ -10,6 +10,7 @@ let snake = [{ x: 10, y: 10 }]; // Initial snake position
 let food = { x: 5, y: 5 }; // Initial food position
 let direction = { x: 0, y: 0 }; // Initial direction
 let score = 0;
+let gameStarted = false; // Track if the game has started
 
 // Game loop
 function gameLoop() {
@@ -20,6 +21,9 @@ function gameLoop() {
 
 // Update game state
 function update() {
+  // Only move the snake if the game has started
+  if (!gameStarted) return;
+
   // Move the snake
   const head = { x: snake[0].x + direction.x, y: snake[0].y + direction.y };
 
@@ -68,6 +72,13 @@ function draw() {
   ctx.fillStyle = "white";
   ctx.font = "20px Arial";
   ctx.fillText(`Score: ${score}`, 10, 30);
+
+  // Display start message if the game hasn't started
+  if (!gameStarted) {
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText("Press an arrow key to start", 50, canvas.height / 2);
+  }
 }
 
 // Place food at a random position
@@ -89,11 +100,16 @@ function resetGame() {
   snake = [{ x: 10, y: 10 }];
   direction = { x: 0, y: 0 };
   score = 0;
+  gameStarted = false; // Reset game state
   placeFood();
 }
 
 // Handle keyboard input
 window.addEventListener("keydown", e => {
+  if (!gameStarted) {
+    gameStarted = true; // Start the game on first key press
+  }
+
   switch (e.key) {
     case "ArrowUp":
       if (direction.y === 0) direction = { x: 0, y: -1 };
